@@ -1,5 +1,3 @@
-version: "3.9"
-
 services:
   frontend: 
     build:
@@ -16,7 +14,7 @@ services:
     depends_on:
       - db
     networks:
-      - app-networks
+      - app-network
 
   db:
     build:
@@ -31,7 +29,7 @@ services:
     ports:
       - "5432:5432"
     networks:
-      - app-network 
+      - app-network
 
 volumes:
   db-dev-data:
@@ -39,17 +37,3 @@ volumes:
 networks:
   app-network:
     driver: bridge
-
-    
-
-
-
-
-
-
-
-
-
-      
-
-  
