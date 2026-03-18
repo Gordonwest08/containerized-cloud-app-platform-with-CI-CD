@@ -1,0 +1,60 @@
+# ======================
+# OS / Editor
+# ======================
+.DS_Store
+.vscode/
+.idea/
+
+# ======================
+# Node / Frontend
+# ======================
+node_modules/
+npm-debug.log*
+yarn-error.log*
+
+# ======================
+# Docker
+# ======================
+**/dist/
+**/build/
+*.tar
+*.log
+
+# ======================
+# Environment variables
+# ======================
+.env
+.env.*
+!env/.env.example
+
+# ======================
+# Docker Compose
+# ======================
+docker-compose.override.yml
+
+# ======================
+# Terraform
+# ======================
+.terraform/
+*.tfstate
+*.tfstate.*
+crash.log
+terraform.tfvars
+
+# ======================
+# AWS / Credentials
+# ======================
+.aws/
+*.pem
+*.key
+
+# ======================
+# CI Artifacts
+# ======================
+coverage/
+reports/
+
+# ======================
+# Database
+# ======================
+**/pgdata/
