@@ -1,0 +1,55 @@
+version: "3.9"
+
+services:
+  frontend: 
+    build:
+      context: ../frontend
+      dockerfile: Dockerfile.dev
+    container_name: frontend-dev
+    ports:
+      - "3000:3000"
+    volumes:
+      - ../frontend/src:/app/src
+    environment: 
+      - NODE_ENV=development
+      - API_URL=http://db:5432
+    depends_on:
+      - db
+    networks:
+      - app-networks
+
+  db:
+    build:
+      context: ../backend
+    container_name: dev_db
+    environment:
+      - POSTGRES_DB=dev_db
+      - POSTGRES_USER=dev_user
+      - POSTGRES_PASSWORD=dev_password
+    volumes:
+      - db-dev-data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - app-network 
+
+volumes:
+  db-dev-data:
+
+networks:
+  app-network:
+    driver: bridge
+
+    
+
+
+
+
+
+
+
+
+
+      
+
+  
