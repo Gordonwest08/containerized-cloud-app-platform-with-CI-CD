@@ -4,11 +4,11 @@ FROM node:22-alpine AS build
 
 WORKDIR /app
 
-#copy dependency manifests
-COPY package.json package-lock.json ./
+#copy dependency manifests (package-lock optional)
+COPY package*.json ./
 
-#instal exact dependencies
-RUN npm ci
+#install dependencies with npm so builds stay reproducible even without a lockfile
+RUN npm install
 
 #copy source code
 COPY src ./src
