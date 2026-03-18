@@ -16,4 +16,4 @@ COPY src ./src
 EXPOSE 3000 
 
 #Start dev server(hot reload)
-CMD ["node", "run", "dev"]
+CMD ["npm", "run", "dev"]
