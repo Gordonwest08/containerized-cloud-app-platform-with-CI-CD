@@ -9,6 +9,7 @@ on:
 env: 
     AWS_REGION: ${{ secrets.AWS_REGION }}
     AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID}}
+    FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 jobs:
     build-and-push:
@@ -37,7 +38,8 @@ jobs:
               run: |
                 docker build \
                   -t $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/frontend:${{ github.sha }} \
-                  -f frontend/Dockerfile.dev
+                  -f frontend/Dockerfile.dev \
+                  frontend
                 docker push \
                   $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/frontend:${{ github.sha }}
 
@@ -46,6 +48,7 @@ jobs:
               run: |
                 docker build \
                   -t $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/db:${{ github.sha }} \
-                  -f -f backend/Dockerfile backend
+                  -f backend/Dockerfile \
+                  backend
                 docker push \
                   $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/db:${{ github.sha }}
