@@ -37,7 +37,7 @@ jobs:
               run: |
                 docker build \
                   -t $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/frontend:${{ github.sha }} \
-                  -f frontend/Dockerfile frontend
+                  -f frontend/Dockerfile.dev
                 docker push \
                   $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/frontend:${{ github.sha }}
 
@@ -46,6 +46,6 @@ jobs:
               run: |
                 docker build \
                   -t $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/db:${{ github.sha }} \
-                  -f database/Dockerfile database
+                  -f -f backend/Dockerfile backend
                 docker push \
                   $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/db:${{ github.sha }}
