@@ -1,0 +1,51 @@
+name: Docker CI -build & push to ECR
+
+on:
+  push:
+    branches:
+      - main
+      - dev
+
+env: 
+    AWS_REGION: ${{ secrets.AWS_REGION }}
+    AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID}}
+
+jobs:
+    build-and-push:
+        runs-on: ubuntu-latest
+
+        steps:
+            # 1 checkout source code
+            - name: checkout
+              uses: actions/checkout@v4
+
+            # 2 Configure AWS credentials
+            - name: configure AWS credentials
+              uses: aws-actions/configure-aws-credentials@v4
+              with:
+                  aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+                  aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+                  aws-region: ${{ secrets.AWS_REGION }}
+
+            # 3 login to Amazon ECR
+            - name: login to Amazon ECR
+              id: login-ecr 
+              uses: aws-actions/amazon-ecr-login@v2
+
+            # 4 Build & push to Amazon ECR 
+            - name: build and push frontend image
+              run: |
+                docker build \
+                  -t $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/frontend:${{ github.sha }} \
+                  -f frontend/Dockerfile frontend
+                docker push \
+                  $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/frontend:${{ github.sha }}
+
+            # 5 build and push DATABASE image
+            - name: build and push database image
+              run: |
+                docker build \
+                  -t $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/db:${{ github.sha }} \
+                  -f database/Dockerfile database
+                docker push \
+                  $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/db:${{ github.sha }}
