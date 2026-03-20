@@ -13,3 +13,7 @@ output "ssm_parameter_prefix" {
 output "ecs_task_role_arn" {
   value = aws_iam_role.ecs_task_role.arn
 }
+
+output "github_oidc_provider_arn" {
+  value = local.github_oidc_provider_arn
+}
