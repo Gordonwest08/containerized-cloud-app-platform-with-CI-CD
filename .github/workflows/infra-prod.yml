@@ -4,10 +4,11 @@
 name: Docker CI -build & push to ECR
 
 on:
-  push:
+  pull_request:
     branches:
       - main
-      - dev
+    
+      
 permissions:
   id-token: write
   contents: read
