@@ -93,8 +93,7 @@ resource "aws_iam_role" "github_actions" {
       Action = "sts:AssumeRoleWithWebIdentity"
       Condition = {
         StringLike = {
-          "token.actions.githubusercontent.com:sub" =
-          "repo:Gordonwest08/containerized-cloud-app-platform-with-CI-CD:*"
+          "token.actions.githubusercontent.com:sub" = "repo:Gordonwest08/containerized-cloud-app-platform-with-CI-CD:*"
         }
       }
     }]
