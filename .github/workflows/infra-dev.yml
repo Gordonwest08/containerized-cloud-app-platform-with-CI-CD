@@ -1,4 +1,4 @@
- name: Provision Dev Infrastructure
+name: Provision Dev Infrastructure
 
 on:
   push:
@@ -25,11 +25,14 @@ jobs:
 
       - uses: hashicorp/setup-terraform@v3
 
-      - run: terraform init
+      - name: Terraform Init
+        run: terraform init
         working-directory: infra/environments/dev
 
-      - run: terraform plan
+      - name: Terraform Plan
+        run: terraform plan
         working-directory: infra/environments/dev
 
-      - run: terraform apply -auto-approve
+      - name: Terraform Apply
+        run: terraform apply -auto-approve
         working-directory: infra/environments/dev
