@@ -1,6 +1,6 @@
 
 
-name: Provision Dev Infrastructure
+name: Provision Dev Infrastructure.
 
 on:
   push:
