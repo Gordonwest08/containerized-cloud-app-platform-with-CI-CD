@@ -28,6 +28,10 @@ jobs:
       - name: Terraform Init
         run: terraform init
         working-directory: infra/environments/dev
+        
+      - name: Terraform validate
+        run: terraform validate
+        working-directory: infra/environments/dev
 
       - name: Terraform Plan
         run: terraform plan
