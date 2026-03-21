@@ -1,0 +1,43 @@
+
+
+name: Provision Dev Infrastructure.
+
+on:
+  push:
+    branches: [ "dev" ]
+    paths:
+      - "infra/**"
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  terraform:
+    runs-on: ubuntu-latest
+
+    permissions:
+      id-token: write
+      contents: read
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::123456789012:role/github-actions-role
+          aws-region: us-east-1
+
+      - uses: hashicorp/setup-terraform@v3
+
+      - name: Terraform Init
+        run: terraform init
+        working-directory: infra/environments/dev
+
+      - name: Terraform Plan
+        run: terraform plan
+        working-directory: infra/environments/dev
+
+      - name: Terraform Apply
+        run: terraform apply -auto-approve
+        working-directory: infra/environments/dev
