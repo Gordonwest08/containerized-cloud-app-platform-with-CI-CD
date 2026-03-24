@@ -1,3 +1,4 @@
+# tear down
 name: Destroy Dev Infrastructure
 
 on:
