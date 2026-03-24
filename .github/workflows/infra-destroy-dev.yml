@@ -15,6 +15,11 @@ permissions:
 jobs:
   destroy:
     runs-on: ubuntu-latest
+    env:
+      TF_VAR_region: ${{ secrets.TF_DEV_REGION }}
+      TF_VAR_frontend_image: ${{ secrets.TF_DEV_FRONTEND_IMAGE }}
+      TF_VAR_db_image: ${{ secrets.TF_DEV_DB_IMAGE }}
+      TF_VAR_db_password: ${{ secrets.TF_DEV_DB_PASSWORD }}
 
     steps:
       - name: Validate confirmation
@@ -33,10 +38,23 @@ jobs:
 
       - uses: hashicorp/setup-terraform@v3
 
+      - name: Generate terraform.tfvars
+        run: |
+          cat <<'EOF' > infra/environments/dev/terraform.tfvars
+          region        = "${{ secrets.TF_DEV_REGION }}"
+          frontend_image = "${{ secrets.TF_DEV_FRONTEND_IMAGE }}"
+          db_image       = "${{ secrets.TF_DEV_DB_IMAGE }}"
+          db_password    = "${{ secrets.TF_DEV_DB_PASSWORD }}"
+          EOF
+
       - name: Terraform Init
         working-directory: infra/environments/dev
         run: terraform init -input=false
 
       - name: Terraform Destroy
         working-directory: infra/environments/dev
-        run: terraform destroy -auto-approve
+        run: terraform destroy -var-file=terraform.tfvars -auto-approve
+
+      - name: Cleanup generated tfvars
+        if: always()
+        run: rm -f infra/environments/dev/terraform.tfvars
