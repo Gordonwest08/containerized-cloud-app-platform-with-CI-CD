@@ -58,14 +58,15 @@ resource "aws_iam_policy" "github_actions_policy" {
       {
         Effect = "Allow"
         Action = [
-          "ec2:*",
-          "ecs:*",
-          "ecr:*",
-          "iam:PassRole",
-          "iam:GetRole",
-          "s3:*",
-          "dynamodb:*",
-          "logs:*"
+      "ec2:*",
+      "ecs:*",
+      "ecr:*",
+      "iam:PassRole",
+      "iam:GetRole",
+      "s3:*",
+      "dynamodb:*",
+      "logs:*",
+      "elasticloadbalancing:*"
         ]
         Resource = "*"
       }
