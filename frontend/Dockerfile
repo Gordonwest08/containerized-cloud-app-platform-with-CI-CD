@@ -10,7 +10,9 @@ COPY package*.json ./
 #install dependencies with npm so builds stay reproducible even without a lockfile
 RUN npm install
 
-#copy source code
+#copy source code and config
+COPY index.html .
+COPY vite.config.js .
 COPY src ./src
 
 
