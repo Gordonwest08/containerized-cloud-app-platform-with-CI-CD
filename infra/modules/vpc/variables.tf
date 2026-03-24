@@ -8,6 +8,7 @@ variable "cidr_block" {
   type        = string
 }
 
+
 variable "public_subnets" {
   description = "Public subnet CIDRs"
   type        = list(string)
