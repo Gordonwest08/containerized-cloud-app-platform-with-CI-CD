@@ -1,0 +1,47 @@
+name: Destroy Dev Infrastructure
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirm_destroy:
+        description: "Type DESTROY to confirm DEV infrastructure teardown"
+        required: true
+        type: string
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  destroy:
+    name: Destroy Dev Infra
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Validate confirmation
+        run: |
+          if [ "${{ inputs.confirm_destroy }}" != "DESTROY" ]; then
+            echo "❌ Destruction not confirmed. Aborting."
+            exit 1
+          fi
+          echo "✅ Destruction confirmed."
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::910541869155:role/github-actions-role
+          aws-region: us-east-1
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Terraform Init (DEV)
+        working-directory: infra/environments/dev
+        run: terraform init -input=false
+
+      - name: Terraform Destroy (DEV)
+        working-directory: infra/environments/dev
+        run: terraform destroy -auto-approve
