@@ -7,12 +7,14 @@ module "vpc" {
   azs             = ["us-east-1a", "us-east-1b"]
 }
 
+data "terraform_remote_state" "shared_iam" {
+  backend = "s3"
 
-module "iam" {
-  source      = "../../modules/iam"
-  name_prefix = "dev"
-  env         = "dev"
-  db_password = var.db_password
+  config = {
+    bucket = "terraform-shared-iam-state"
+    key    = "shared-iam/terraform.tfstate"
+    region = "us-east-1"
+  }
 }
 
 module "ecs" {
@@ -23,9 +25,11 @@ module "ecs" {
   subnets                = module.vpc.private_subnets
   public_subnets         = module.vpc.public_subnets
   region                 = var.region
+
   frontend_image         = var.frontend_image
   db_image               = var.db_image
-  execution_role_arn     = module.iam.execution_role_arn
-  task_role_arn          = module.iam.ecs_task_role_arn
-  db_password_secret_arn = module.iam.db_password_secret_arn
+
+  execution_role_arn     = data.terraform_remote_state.shared_iam.outputs.ecs_execution_role_arn
+  task_role_arn          = data.terraform_remote_state.shared_iam.outputs.ecs_task_role_arn
+  db_password_secret_arn = data.terraform_remote_state.shared_iam.outputs.db_password_secret_arn
 }
