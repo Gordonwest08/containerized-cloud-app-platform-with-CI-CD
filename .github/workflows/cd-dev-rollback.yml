@@ -1,0 +1,30 @@
+name: Rollback Dev Deployment
+
+on:
+  workflow_dispatch:
+    inputs:
+      task_definition_arn:
+        description: "Previous task definition ARN"
+        required: true
+        type: string
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  rollback:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::910541869155:role/github-actions-role
+          aws-region: us-east-1
+
+      - name: Rollback ECS service
+        run: |
+          aws ecs update-service \
+            --cluster dev-cluster \
+            --service frontend \
+            --task-definition ${{ inputs.task_definition_arn }}
