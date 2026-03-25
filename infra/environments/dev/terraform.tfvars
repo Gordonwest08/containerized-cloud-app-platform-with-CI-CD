@@ -6,5 +6,3 @@ db_image       = "123456789012.dkr.ecr.us-east-1.amazonaws.com/db:latest"
 
 
 
-
-db_password = "super-secret-password"

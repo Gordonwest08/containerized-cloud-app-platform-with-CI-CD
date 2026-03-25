@@ -8,13 +8,6 @@ module "vpc" {
 }
 
 
-module "iam" {
-  source      = "../../modules/iam"
-  name_prefix = "dev"
-  env         = "dev"
-  db_password = var.db_password
-}
-
 module "ecs" {
   source                 = "../../modules/ecs"
   cluster_name           = "dev-cluster"
@@ -25,7 +18,7 @@ module "ecs" {
   region                 = var.region
   frontend_image         = var.frontend_image
   db_image               = var.db_image
-  execution_role_arn     = module.iam.execution_role_arn
-  task_role_arn          = module.iam.ecs_task_role_arn
-  db_password_secret_arn = module.iam.db_password_secret_arn
+  execution_role_arn     = data.terraform_remote_state.shared_iam.outputs.execution_role_arn
+  task_role_arn          = data.terraform_remote_state.shared_iam.outputs.ecs_task_role_arn
+  db_password_secret_arn = data.terraform_remote_state.shared_iam.outputs.db_password_secret_arn
 }

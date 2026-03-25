@@ -3,7 +3,7 @@ output "execution_role_arn" {
 }
 
 output "db_password_secret_arn" {
-  value = aws_secretsmanager_secret.db_password.arn
+  value = data.aws_secretsmanager_secret.db_password.arn
 }
 
 output "ssm_parameter_prefix" {
@@ -11,7 +11,7 @@ output "ssm_parameter_prefix" {
 }
 
 output "ecs_task_role_arn" {
-  value = aws_iam_role.ecs_task_role.arn
+  value = data.aws_iam_role.ecs_task_role.arn
 }
 
 output "github_oidc_provider_arn" {

@@ -12,8 +12,3 @@ variable "github_oidc_provider_arn" {
   type        = string
   default     = ""
 }
-
-variable "db_password" {
-  type      = string
-  sensitive = true
-}
