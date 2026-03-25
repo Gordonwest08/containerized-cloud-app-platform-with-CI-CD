@@ -19,6 +19,8 @@ COPY src ./src
 #build production assests
 RUN npm run build
 
+
+
 #########################
 #stage2:Runtimestage(distroless)
 #########################
