@@ -39,7 +39,7 @@ docker-compose.override.yml
 *.tfstate
 *.tfstate.*
 crash.log
-terraform.tfvars
+
 
 # ======================
 # AWS / Credentials
