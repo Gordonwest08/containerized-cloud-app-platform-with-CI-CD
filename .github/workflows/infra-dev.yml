@@ -1,12 +1,11 @@
-
-
 name: Provision Dev Infrastructure
 
 on:
   push:
-    branches: [ "dev" ]
+    branches:
+      - dev
     paths:
-      - "infra/**"
+      - infra/**
 
 permissions:
   id-token: write
@@ -15,29 +14,47 @@ permissions:
 jobs:
   terraform:
     runs-on: ubuntu-latest
-
-    permissions:
-      id-token: write
-      contents: read
+    env:
+      TF_VAR_region: ${{ secrets.TF_DEV_REGION }}
+      TF_VAR_frontend_image: ${{ secrets.TF_DEV_FRONTEND_IMAGE }}
+      TF_VAR_db_image: ${{ secrets.TF_DEV_DB_IMAGE }}
+      TF_VAR_db_password: ${{ secrets.TF_DEV_DB_PASSWORD }}
 
     steps:
       - uses: actions/checkout@v4
 
       - uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: arn:aws:iam::123456789012:role/github-actions-role
+          role-to-assume: arn:aws:iam::910541869155:role/github-actions-role
           aws-region: us-east-1
+
+      - name: Generate terraform.tfvars for CI
+        run: |
+          cat <<'EOF' > infra/environments/dev/terraform.tfvars
+          region        = "${{ secrets.TF_DEV_REGION }}"
+          frontend_image = "${{ secrets.TF_DEV_FRONTEND_IMAGE }}"
+          db_image       = "${{ secrets.TF_DEV_DB_IMAGE }}"
+          db_password    = "${{ secrets.TF_DEV_DB_PASSWORD }}"
+          EOF
 
       - uses: hashicorp/setup-terraform@v3
 
       - name: Terraform Init
         run: terraform init
         working-directory: infra/environments/dev
+        
+      - name: Terraform validate
+        run: terraform validate
+        working-directory: infra/environments/dev
 
       - name: Terraform Plan
-        run: terraform plan
+        run: terraform plan -var-file=terraform.tfvars -input=false
         working-directory: infra/environments/dev
 
       - name: Terraform Apply
-        run: terraform apply -auto-approve
+        run: terraform apply -var-file=terraform.tfvars -auto-approve
         working-directory: infra/environments/dev
+
+      - name: Cleanup generated tfvars
+        if: always()
+        run: rm -f infra/environments/dev/terraform.tfvars
