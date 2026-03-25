@@ -30,5 +30,8 @@ COPY --from=build /app/dist ./dist
 
 #Document port to be exposed here
 EXPOSE 3000
+
+
+
 #start the app
 CMD ["dist/index.js"]
